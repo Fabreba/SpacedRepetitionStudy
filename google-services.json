@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "17493198958",
+    "project_id": "spacedrepetitionstudy",
+    "storage_bucket": "spacedrepetitionstudy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:17493198958:android:420964f20e95f0556afe7f",
+        "android_client_info": {
+          "package_name": "com.comic.spacedrepetition"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCr5ZZJP_73lfNMqGS83t4SCn145Ll29Xw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

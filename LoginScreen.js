@@ -1,7 +1,14 @@
 import React, { useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, useWindowDimensions, View } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { auth } from "./firebaseConfig";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
 
 export default function LoginScreen() {
@@ -11,6 +18,16 @@ export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isLogin, setIsLogin] = useState(false);
+
+  const handleLogin = async () => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      navigation.navigate("Home");
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const handleCreateAccount = async () => {
     if (password !== confirmPassword) {
       alert("Passwords do not match!");
@@ -31,28 +48,50 @@ export default function LoginScreen() {
         <Text style={{ fontWeight: "600", fontSize: 16 }}>
           Olá, seja bem-vindo!
         </Text>
-        <Text style={{ fontSize: 12}}>
+        <Text style={{ fontSize: 12 }}>
           Esta é uma plataforma de ensino que oferece ensino baseado em
           repetição espaçada.
         </Text>
         <Text style={{ fontWeight: "600", fontSize: 16 }}>
           Acesse e descubra!
         </Text>
-        <View style={{flex: 1, flexDirection: "row", alignContent: 'center', justifyContent:'space-between', marginHorizontal: 32}}>
-          <Pressable style={styles.button}>
-            <Text>Criar</Text>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            alignContent: "center",
+            justifyContent: "space-between",
+            marginHorizontal: 32,
+          }}
+        >
+          <Pressable
+            style={styles.button}
+            onPress={() => {
+              setIsLogin(false);
+            }}
+          >
+            <Text style={styles.buttonText}>Criar</Text>
           </Pressable>
-          <Pressable style={styles.button}>
-            <Text>Entrar</Text>
+          <Pressable
+            style={styles.button}
+            onPress={() => {
+              setIsLogin(true);
+            }}
+          >
+            <Text style={styles.buttonText}>Entrar</Text>
           </Pressable>
         </View>
-        <View style={{ gap: 12, marginTop: 32 }}>
+        {isLogin ? (
+          <></>
+        ) : (
           <TextInput
             style={styles.text_input}
             placeholder="Nome completo"
             onChangeText={(text) => setName(text)}
             value={name}
           />
+        )}
+        <View style={{ gap: 12}}>
           <TextInput
             style={styles.text_input}
             placeholder="Seu E-mail"
@@ -66,18 +105,28 @@ export default function LoginScreen() {
             onChangeText={(text) => setPassword(text)}
             value={password}
           />
-          <TextInput
-            style={styles.text_input}
-            placeholder="Confirme sua senha"
-            secureTextEntry
-            onChangeText={(text) => setConfirmPassword(text)}
-            value={confirmPassword}
-          />
+          {isLogin ? (
+            <></>
+          ) : (
+            <TextInput
+              style={styles.text_input}
+              placeholder="Confirme sua senha"
+              secureTextEntry
+              onChangeText={(text) => setConfirmPassword(text)}
+              value={confirmPassword}
+            />
+          )}
         </View>
       </View>
-      <Pressable style={styles.button} onPress={handleCreateAccount}>
-        <Text style={styles.buttonText}>Criar nova conta</Text>
-      </Pressable>
+      {isLogin ? (
+        <Pressable style={styles.button} onPress={handleLogin}>
+          <Text style={styles.buttonText}>Entrar</Text>
+        </Pressable>
+      ) : (
+        <Pressable style={styles.button} onPress={handleCreateAccount}>
+          <Text style={styles.buttonText}>Criar nova conta</Text>
+        </Pressable>
+      )}
     </View>
   );
 }
@@ -94,11 +143,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   button: {
-    backgroundColor: "#0056ff",
+    backgroundColor: "#262626",
     paddingVertical: 16,
     borderRadius: 8,
     marginHorizontal: 24,
     alignItems: "center",
+    padding: 16,
   },
   buttonText: {
     color: "#fff",
